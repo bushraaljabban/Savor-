@@ -9,13 +9,12 @@ use Illuminate\Http\Request;
 class MealController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the menu.
      */
     public function index()
     {
       
-      return Meal::all();
-
+      return response()->json(Meal::all());
     }
 
     /**
@@ -23,7 +22,7 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-      $request->validate([
+       $validated =$request->validate([
         'name' => ['required','max:255'],
         'description' => ['nullable'],
         'price' => ['required','numeric','min:0'],

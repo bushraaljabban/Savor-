@@ -2,6 +2,24 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MenuController;
+
+Route::get('/menu', [\App\Http\Controllers\MenuController::class, 'index'])->name('menu.index');
+Route::middleware(['auth:sanctum', 'ensureUserIsManager'])->group(function () {
+    Route::post('meals', [MealController::class, 'store']);
+    Route::delete('meals/{meal}', [MealController::class, 'destroy']);
+});
+Route::middleware(['auth:sanctum', 'ensureUserIsCaptain'])->group(function () {
+    Route::get('orders', [OrderController::class, 'listForCaptain']); // عرض الطلبات
+    Route::put('orders/{order}/status', [OrderController::class, 'updateStatus']); // تحديث حالة الطلب
+});
+
+Route::get('meals', [MealController::class, 'index']); // للجميع
+
+
+Route::middleware('auth')->group(function () {
+    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
+});
 
 Route::get('/', function () {
     return view('welcome');
